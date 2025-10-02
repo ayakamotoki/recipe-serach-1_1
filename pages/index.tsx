@@ -1,6 +1,7 @@
 "use client"; 
 // Next.js App Router でクライアントサイドコンポーネントとして実行する指定
 
+import { ParsedUrlQueryInput } from "querystring";
 import Image from "next/image"; // 画像最適化付きのコンポーネント
 import Link from "next/link";   // ページ遷移用コンポーネント
 import { useState, useMemo, useEffect } from "react"; // Reactフック
@@ -15,7 +16,7 @@ export default function Page() {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 
   // 抽選で選ばれた料理を保持（今は未使用に近い）
-  const [result, setResult] = useState<FoodItem | null>(null);
+  const [_result, setResult] = useState<FoodItem | null>(null);
 
   // ページ遷移用
   const router = useRouter();
@@ -40,14 +41,21 @@ export default function Page() {
   };
 
   // 「献立を決める」ボタン押下で /result ページに遷移
-  const handleClick = () => {
-    if (!genre) return; // ジャンル未選択なら何もしない
-    const query: any = { genre };
-    if (selectedIngredients.length > 0)
-      query.ingredients = selectedIngredients.join(",");
-    // 選択したジャンル・材料をクエリパラメータにして遷移
-    router.push({ pathname: "/result", query });
-  };
+const handleClick = () => {
+  if (!genre) return;
+
+  // Next.js pages router で渡せる型に合わせる
+  const query: ParsedUrlQueryInput = { genre };
+  if (selectedIngredients.length > 0) {
+    query.ingredients = selectedIngredients.join(","); // string でOK
+  }
+
+  router.push({
+    pathname: "/result",
+    query,
+  });
+};
+
 
   // ランダムに 5 件の料理を取得しておすすめ表示用に保持
   const [randomFive, setRandomFive] = useState<FoodItem[]>([]);
