@@ -1,115 +1,195 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+"use client"; 
+// Next.js App Router でクライアントサイドコンポーネントとして実行する指定
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import Image from "next/image"; // 画像最適化付きのコンポーネント
+import Link from "next/link";   // ページ遷移用コンポーネント
+import { useState, useMemo, useEffect } from "react"; // Reactフック
+import { useRouter } from "next/router"; // ページ遷移やクエリ取得に使用
+import { FoodItem, foods } from "../data/foods"; // データ（料理のジャンル・食材・レシピ情報）をインポート
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export default function Page() {
+  // 選択中のジャンルを保持
+  const [genre, setGenre] = useState<string>("");
 
-export default function Home() {
+  // 選択中の食材リストを保持
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+
+  // 抽選で選ばれた料理を保持（今は未使用に近い）
+  const [result, setResult] = useState<FoodItem | null>(null);
+
+  // ページ遷移用
+  const router = useRouter();
+
+  // 現在のジャンルに含まれる「利用可能な材料一覧」を計算
+  const availableIngredients = useMemo(() => {
+    if (!genre) return []; // ジャンル未選択なら空
+    const ingSet = new Set<string>();
+    foods[genre]?.forEach((food) =>
+      food.ingredients.forEach((ing) => ingSet.add(ing))
+    );
+    return Array.from(ingSet); // 重複なしで返す
+  }, [genre]);
+
+  // 材料をクリックしたときに選択/解除を切り替える
+  const toggleIngredient = (ingredient: string) => {
+    setSelectedIngredients((prev) =>
+      prev.includes(ingredient)
+        ? prev.filter((i) => i !== ingredient) // すでに入っていれば外す
+        : [...prev, ingredient] // 入ってなければ追加
+    );
+  };
+
+  // 「献立を決める」ボタン押下で /result ページに遷移
+  const handleClick = () => {
+    if (!genre) return; // ジャンル未選択なら何もしない
+    const query: any = { genre };
+    if (selectedIngredients.length > 0)
+      query.ingredients = selectedIngredients.join(",");
+    // 選択したジャンル・材料をクエリパラメータにして遷移
+    router.push({ pathname: "/result", query });
+  };
+
+  // ランダムに 5 件の料理を取得しておすすめ表示用に保持
+  const [randomFive, setRandomFive] = useState<FoodItem[]>([]);
+  useEffect(() => {
+    // 「すべて」ジャンルがあればそこから、それがなければ全ジャンルを結合
+    const all = foods["すべて"].length
+      ? foods["すべて"]
+      : [...foods["肉"], ...foods["魚"], ...foods["麺"]];
+    // シャッフルして先頭 5 件を取り出す
+    const shuffled = [...all].sort(() => 0.5 - Math.random());
+    setRandomFive(shuffled.slice(0, 5));
+  }, []);
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="bg-[#fffff7]">
+      <div className="p-6 text-center ">
+        {/* タイトル部分 */}
+        <h1 className="pt-38 text-3xl font-bold mb-2 text-[#f2571a]">今日の献立ナビ</h1>
+        <h1 className="text-sm text-[#f88153]">食べたいジャンル、使いたい食材から</h1>
+        <h1 className="text-sm mb-4 text-[#f88153]">ランダムで今日の献立を決めよう！</h1>
+
+        {/* ▼ ジャンル選択ボタン群 ▼ */}
+        <h2 className="text-lg font-bold text-[#3F0F0F] mb-2 pt-8 pb-2">ジャンルを選ぶ</h2>
+        <div className="flex gap-4 justify-center mb-6">
+          {Object.keys(foods)
+            .filter((g) => g !== "すべて") // 「すべて」は除外
+            .map((g) => (
+              <button
+                key={g}
+                onClick={() => {
+                  setGenre(g); // ジャンル切替
+                  setSelectedIngredients([]); // 材料リセット
+                  setResult(null); // 結果リセット
+                }}
+                className={`px-4 py-2 rounded-xl border-2 border-neutral-600 cursor-pointer ${
+                  genre === g
+                    ? "bg-[#f88159] font-bold text-white" // 選択中スタイル
+                    : "text-[#3F0F0F] bg-[#fffff7]" // 通常スタイル
+                }`}
+              >
+                {g}
+              </button>
+            ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* ▼ 材料選択（ジャンルが選ばれているときのみ表示） ▼ */}
+        {genre && (
+          <div>
+            <h3 className="text-lg font-bold text-[#3F0F0F] mt-4 mb-2">材料を選ぶ</h3>
+            <div className="mb-2 text-[#3F0F0F]">材料にこだわりがなければ未選択</div>
+            <div className="flex flex-wrap gap-2 justify-center mb-6 m-4 mx-8">
+              {availableIngredients.map((ing) => (
+                <label
+                  key={ing}
+                  className={`border px-3 py-1 rounded cursor-pointer ${
+                    selectedIngredients.includes(ing)
+                      ? "bg-[#f88159]" // 選択中スタイル
+                      : "text-[#3F0F0F] bg-white" // 未選択スタイル
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedIngredients.includes(ing)}
+                    onChange={() => toggleIngredient(ing)}
+                    className="mr-2"
+                  />
+                  {ing}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ▼ 抽選ボタン ▼ */}
+        <button
+          onClick={handleClick}
+          className="bg-green-500 text-white px-6 py-2 rounded mb-4 cursor-pointer"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          献立を決める
+        </button>
+
+
+        {/* ▼ ジャンルページへのリンク（一覧ページへ飛ぶ） ▼ */}
+        <div className="mt-3">
+          <h2 className="text-lg font-bold mb-3 text-[#3F0F0F]">一覧</h2>
+          <div className="flex flex-wrap gap-4 justify-center">
+            {Object.keys(foods).map((g) => (
+              <Link
+                key={g}
+                href={`/genre/${encodeURIComponent(g)}`} // 例: /genre/肉
+                className="w-40 bg-[#f88153] text-white font-medium text-center py-3 px-4 rounded-lg hover:bg-blue-600"
+              >
+                {g} の一覧
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ▼ ランダムおすすめ5件 ▼ */}
+        <div className="bg-[#f2efe9] p-4 mt-8">
+          <div className="flex pb-2 text-xl font-bold mb-4 px-2 text-[#f2571a]">
+            <Image
+              src={"/recommend.png"}
+              alt={"recommend"}
+              width={30}
+              height={30}
+              className="rounded-full border border-[#3F0F0F] shadow-md"
+            /><h2 className="ml-4">本日のおすすめ</h2></div>
+          <div className="flex space-x-4 overflow-x-auto pb-4 px-2">
+            {randomFive.map((f) => (
+              <div
+                key={f.name}
+                className="flex-none bg-white shadow-lg rounded-lg border border-[#3F0F0F] p-4 flex flex-col justify-between"
+              >
+                {/* 料理画像 */}
+                <div className="mb-6 w-48 h-25 relative">
+                  <Image
+                    src={f.image}
+                    alt={f.name}
+                    fill
+                    className="rounded-lg shadow-md mask-center object-cover"
+                  />
+                </div>
+                {/* 料理名 */}
+                <h1 className="text-2xl text-[#3F0F0F] font-bold text-center">
+                  {f.name}
+                </h1>
+                {/* 詳細ページリンク */}
+                <div className="mt-4 text-center">
+                  <Link
+                    href={`/recipe/${encodeURIComponent(f.name)}`}
+                    className="inline-block px-4 py-2 rounded-full bg-[#f88153] text-white text-sm font-medium hover:bg-blue-600"
+                  >
+                    詳細レシピを見る
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
