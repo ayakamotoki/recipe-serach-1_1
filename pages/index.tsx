@@ -73,6 +73,7 @@ const handleClick = () => {
     <div className="bg-[#fffff7]">
       <div className="p-6 text-center ">
         {/* タイトル部分 */}
+        <title>今日の献立ナビ</title>
         <h1 className="pt-38 text-3xl font-bold mb-2 text-[#f2571a]">今日の献立ナビ</h1>
         <h1 className="text-sm text-[#f88153]">食べたいジャンル、使いたい食材から</h1>
         <h1 className="text-sm mb-4 text-[#f88153]">ランダムで今日の献立を決めよう！</h1>
