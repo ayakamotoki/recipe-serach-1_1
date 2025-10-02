@@ -154,9 +154,9 @@ const handleClick = () => {
             ))}
           </div>
         </div>
-
+    </div>
         {/* ▼ ランダムおすすめ5件 ▼ */}
-        <div className="bg-[#f2efe9] p-4 mt-8">
+        <div className="bg-[#f2efe9] py-4 mt-8">
           <div className="flex pb-2 text-xl font-bold mb-4 px-2 text-[#f2571a]">
             <Image
               src={"/recommend.png"}
@@ -165,7 +165,7 @@ const handleClick = () => {
               height={30}
               className="rounded-full border border-[#3F0F0F] shadow-md"
             /><h2 className="ml-4">本日のおすすめ</h2></div>
-          <div className="flex space-x-4 overflow-x-auto pb-4 px-2">
+          <div className="flex space-x-4 overflow-x-auto pb-4 pl-4">
             {randomFive.map((f) => (
               <div
                 key={f.name}
@@ -199,6 +199,6 @@ const handleClick = () => {
         </div>
 
       </div>
-    </div>
+
   );
 }

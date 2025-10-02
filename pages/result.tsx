@@ -123,19 +123,7 @@ export default function ResultPage() {
                 {result.name}
               </h1>
 
-              {/*
-                レシピ表示についての注意:
-                - データ構造によって recipe が string, string[] のどちらになるかが混在しているケースがあります。
-                - このコードでは簡便のためそのまま出力していますが、
-                  配列の場合は map して <ol> や <p> を個別表示するほうが見栄えが良くなります。
-              */}
-              <p className="text-gray-600 text-center mt-2">
-                {/*
-                  result.recipe が配列なら join して表示する、という簡易対応を入れると表示が安定します。
-                  例: Array.isArray(result.recipe) ? result.recipe.join(" ") : result.recipe
-                */}
-                {Array.isArray(result.recipe) ? result.recipe.join(" ") : result.recipe}
-              </p>
+
             </div>
 
             {/* 詳細レシピページへ遷移するリンク */}

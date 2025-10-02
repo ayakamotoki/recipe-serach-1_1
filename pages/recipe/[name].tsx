@@ -79,7 +79,7 @@ export default function RecipeDetail() {
             </h1>
 
             {/* 材料リスト */}
-            <p className="mb-4 text-2xl font-bold text-left text-[#f2571a]">
+            <p className="mb-4 pb-4 text-2xl font-bold border-b border-[#3F0F0F] text-left text-[#f2571a]">
               材料
               <div className="text-right text-[#3F0F0F]">
                 <ul className="text-[#3F0F0F] text-lg">
