@@ -69,17 +69,17 @@ export default function RecipeDetail() {
             alt={`${recipe.name}の画像`}
             width={375}
             height={400}
-            className="mx-auto rounded-lg shadow-md object-cover"
+            className="mx-auto rounded-lg shadow-md"
           />
 
-          <div className="p-6">
+          <div className="mx-auto p-6 md:w-180">
             {/* 料理名 */}
             <h1 className="text-3xl font-bold mb-4 text-[#3F0F0F]">
               {recipe.name}
             </h1>
 
             {/* 材料リスト */}
-            <p className="mb-4 pb-4 text-2xl font-bold border-b border-[#3F0F0F] text-left text-[#f2571a]">
+            <p className="mb-4 pb-4 pr-4 text-2xl font-bold border-b border-[#3F0F0F] text-left text-[#f2571a]">
               材料
               <div className="text-right text-[#3F0F0F]">
                 <ul className="text-[#3F0F0F] text-lg">
@@ -94,9 +94,9 @@ export default function RecipeDetail() {
             <p className="mb-4 text-2xl font-bold text-left text-[#f2571a]">
               作り方
             </p>
-            <ol className="text-[#3F0F0F] text-lg font-bold text-left list-decimal list-inside">
+            <ol className="text-[#3F0F0F] text-lg px-2 font-bold text-left list-decimal list-inside">
               {recipe.recipe.map((item, index) => (
-                <li key={index} className="py-2">
+                <li key={index} className="py-3">
                   {item}
                 </li>
               ))}

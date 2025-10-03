@@ -98,23 +98,24 @@ export default function ResultPage() {
       <div className="p-6">
         <h1 className="text-3xl font-bold mb-6 text-[#f2571a]">ランダムの結果</h1>
 
+<div className="flex justify-center">
         {/* result が存在する場合のみ表示 */}
         {result && (
           <div
             key={result.name}
-            className="flex-none bg-white shadow-lg rounded-4xl border border-[#3F0F0F] p-4 flex flex-col justify-between"
+            className="flex-non bg-white shadow-lg rounded-4xl border border-[#3F0F0F] p-4 w-full md:w-130"
           >
             <div>
               {/* 画像部分
-                  - result.image が空文字列の場合は /favicon.ico を代替表示
+                  - result.image が空文字列の場合は /ノーイメージ.png を代替表示
                   - Next.js Image の fill を使って親要素にフィットさせる
               */}
-              <div className="mb-6 w-full h-25 relative">
+              <div className="mb-6 w-full h-35 md:h-50 relative">
                 <Image
                   src={result.image || "/ノーイメージ.png"}
                   alt={`${result.name}の画像`}
                   fill
-                  className="rounded-lg shadow-md object-cover"
+                  className="rounded-lg shadow-md "
                 />
               </div>
 
@@ -137,6 +138,7 @@ export default function ResultPage() {
             </div>
           </div>
         )}
+</div>
       </div>
     </div>
   );

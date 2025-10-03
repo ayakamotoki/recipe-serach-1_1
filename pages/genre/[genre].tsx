@@ -78,12 +78,7 @@ export default function GenrePage() {
           ))}
         </div>
 
-        {/* トップに戻るリンク */}
-        <div className="mt-6">
-          <Link href="/" className="text-green-500 underline">
-            ← トップに戻る
-          </Link>
-        </div>
+
       </div>
     </div>
   );
