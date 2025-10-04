@@ -26,9 +26,9 @@ export default function GenrePage() {
   if (list.length === 0) return <p>{genre} の料理は登録されていません。</p>;
 
   return (
-    <div className="bg-[#fffff7] min-h-screen">
+    <div className="bg-[#fffff7]">
       {/* ヘッダー部分 */}
-      <div className="bg-[#f2efe9] p-4 border-b border-[#3F0F0F]">
+      <div className="bg-[#f2efe9] p-4 border-b border-[#3F0F0F] sticky top-0 z-50">
         <div className="flex">
           {/* トップページに戻るボタン */}
           <Link href={`/`}>
@@ -37,7 +37,7 @@ export default function GenrePage() {
             </div>
           </Link>
           {/* サイトタイトル */}
-          <h1 className="pl-14 pb-2 text-2xl font-bold text-[#f2571a]">今日の献立ナビ</h1>
+          <h1 className="pl-20 pb-2 text-2xl font-bold text-[#f2571a]">今日の献立ナビ</h1>
         </div>
 
         {/* ジャンル名表示 */}

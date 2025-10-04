@@ -21,18 +21,25 @@ export default function RecipeDetail() {
     return (
       <div>
         <main className="min-h-screen relative">
-          <div className="text-center p-6">
-            <p className="p-6 text-center">レシピが見つかりませんでした。</p>
-
-            {/* ホームに戻るリンク */}
-            <div className="mx-auto mt-6 shadow-lg rounded-full p-4 bg-sky-100 text-neutral-600 underline font-medium text-xl sm:w-1/3">
-              <Link href="/" className=" text-xl font-medium">
-                ← ホームに戻る
-              </Link>
+          <div className="flex bg-[#f2efe9] p-2 pb-2 pt-4 gap-17 border-b border-[#3F0F0F]">
+          {/* 戻るボタン */}
+          <Link href={`/`}>
+            <div className="cursor-pointer">
+              <Image
+                src={"/back.png"}
+                alt={"戻る"}
+                width={30}
+                height={30}
+                className="rounded-full border my-4 ml-2 border-[#3F0F0F]"
+              />
             </div>
+          </Link>
+          <h1 className="text-2xl font-bold py-4 text-[#f2571a]">今日の献立ナビ</h1>
+        </div>
+      
+          <div className="text-center p-6">
+            <p className="p-6 text-center font-bold">レシピが見つかりませんでした。</p>
           </div>
-
-          <footer className="absolute inset-x-0 bottom-0"></footer>
         </main>
       </div>
     );
@@ -42,8 +49,8 @@ export default function RecipeDetail() {
   return (
     <div className="min-h-screen relative bg-[#fffff7]">
       {/* ヘッダー部分 */}
-      <div className="bg-[#f2efe9] p-4 border-b border-[#3F0F0F]">
-        <div className="flex pb-2 pt-4 gap-14">
+      <div className="bg-[#f2efe9] p-4 border-b border-[#3F0F0F] sticky top-0 z-50">
+        <div className="flex pb-2 pt-4 gap-17">
           {/* 戻るボタン */}
           <Link href={`/`}>
             <div className="cursor-pointer">

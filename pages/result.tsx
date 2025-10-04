@@ -73,7 +73,7 @@ export default function ResultPage() {
     <div className="bg-[#fffff7] min-h-screen">
       {/* ヘッダー */}
       <div className="bg-[#f2efe9] p-4 border-b border-[#3F0F0F]">
-        <div className="flex pb-2 pt-4 gap-14">
+        <div className="flex pb-2 pt-4 gap-17">
           {/* トップへ戻るリンク（クリックで / に遷移） */}
           <Link href={`/`}>
             <div className="cursor-pointer">
