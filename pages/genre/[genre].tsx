@@ -37,7 +37,7 @@ export default function GenrePage() {
             </div>
           </Link>
           {/* サイトタイトル */}
-          <h1 className="pl-20 pb-2 text-2xl font-bold text-[#f2571a]">今日の献立ナビ</h1>
+          <h1 className="pl-18 pb-2 text-2xl font-bold text-[#f2571a]">今日の献立ナビ</h1>
         </div>
 
         {/* ジャンル名表示 */}
